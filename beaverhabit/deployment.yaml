@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beaverhabit
+  namespace: norriswu0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beaverhabit
+  template:
+    metadata:
+      labels:
+        app: beaverhabit
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: beaverhabit
+          image: daya0576/beaverhabits:sha-fa5a178
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HABITS_STORAGE
+              value: USER_DISK
+            - name: INDEX_HABIT_DATE_COLUMNS
+              value: "5"
+            - name: ENABLE_IOS_STANDALONE
+              value: "true"
+            - name: TRUSTED_LOCAL_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: beaverhabit-secrets
+                  key: TRUSTED_LOCAL_EMAIL
+          volumeMounts:
+            - name: data
+              mountPath: /app/.user/
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: beaverhabit-data
