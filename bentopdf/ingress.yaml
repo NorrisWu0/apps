@@ -5,9 +5,11 @@ metadata:
   namespace: norriswu0
 spec:
   ingressClassName: tailscale
+  tls:
+    - hosts:
+        - pdf
   rules:
-    - host: pdf.hoki-solt.ts.net
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
