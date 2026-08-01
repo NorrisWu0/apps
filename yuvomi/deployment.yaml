@@ -27,6 +27,11 @@ spec:
               value: /backups
             - name: SESSION_SECURE
               value: "false"
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: yuvomi-secrets
+                  key: SESSION_SECRET
           volumeMounts:
             - name: data
               mountPath: /data
