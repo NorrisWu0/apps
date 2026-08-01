@@ -27,6 +27,9 @@ spec:
               containerPort: 8642
             - name: dashboard
               containerPort: 9119
+          envFrom:
+            - secretRef:
+                name: hermes-secrets
           env:
             - name: HERMES_DASHBOARD
               value: "1"
@@ -42,31 +45,6 @@ spec:
               value: 0.0.0.0
             - name: API_SERVER_PORT
               value: "8642"
-            - name: DEEPSEEK_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: hermes-secrets
-                  key: DEEPSEEK_API_KEY
-            - name: API_SERVER_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: hermes-secrets
-                  key: API_SERVER_KEY
-            - name: HERMES_DASHBOARD_OIDC_ISSUER
-              valueFrom:
-                secretKeyRef:
-                  name: hermes-secrets
-                  key: HERMES_DASHBOARD_OIDC_ISSUER
-            - name: HERMES_DASHBOARD_OIDC_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: hermes-secrets
-                  key: HERMES_DASHBOARD_OIDC_CLIENT_ID
-            - name: HERMES_DASHBOARD_OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: hermes-secrets
-                  key: HERMES_DASHBOARD_OIDC_CLIENT_SECRET
           volumeMounts:
             - name: data
               mountPath: /opt/data
