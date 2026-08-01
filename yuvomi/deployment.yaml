@@ -27,11 +27,6 @@ spec:
               value: /backups
             - name: SESSION_SECURE
               value: "false"
-            - name: SESSION_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: yuvomi-secrets
-                  key: SESSION_SECRET
           volumeMounts:
             - name: data
               mountPath: /data
@@ -45,6 +40,10 @@ spec:
             - name: data
               mountPath: /documents
               subPath: documents
+            - name: secrets
+              mountPath: /app/.env
+              subPath: .env
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /health
@@ -61,3 +60,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: yuvomi-data
+        - name: secrets
+          secret:
+            secretName: yuvomi-secrets
