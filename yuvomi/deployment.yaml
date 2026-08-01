@@ -21,12 +21,26 @@ spec:
           env:
             - name: NODE_ENV
               value: production
+            - name: PORT
+              value: "3000"
             - name: DB_PATH
               value: /data/yuvomi.db
             - name: BACKUP_DIR
               value: /backups
             - name: SESSION_SECURE
-              value: "false"
+              value: "true"
+            - name: TRUST_PROXY
+              value: "1"
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: yuvomi-secrets
+                  key: SESSION_SECRET
+            - name: DB_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: yuvomi-secrets
+                  key: DB_ENCRYPTION_KEY
           volumeMounts:
             - name: data
               mountPath: /data
@@ -40,10 +54,6 @@ spec:
             - name: data
               mountPath: /documents
               subPath: documents
-            - name: secrets
-              mountPath: /app/.env
-              subPath: .env
-              readOnly: true
           livenessProbe:
             httpGet:
               path: /health
@@ -60,6 +70,3 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: yuvomi-data
-        - name: secrets
-          secret:
-            secretName: yuvomi-secrets
