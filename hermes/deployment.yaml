@@ -33,21 +33,15 @@ spec:
           env:
             - name: HERMES_DASHBOARD
               value: "1"
-            - name: HERMES_DASHBOARD_HOST
-              value: 0.0.0.0
-            - name: HERMES_DASHBOARD_PORT
-              value: "9119"
-            - name: HERMES_DASHBOARD_PUBLIC_URL
-              value: https://hermes.hoki-sole.ts.net
-            - name: API_SERVER_ENABLED
+            - name: HERMES_SKIP_CONFIG_MIGRATION
               value: "true"
-            - name: API_SERVER_HOST
-              value: 0.0.0.0
-            - name: API_SERVER_PORT
-              value: "8642"
           volumeMounts:
             - name: data
               mountPath: /opt/data
+            - name: config
+              mountPath: /opt/data/config.yaml
+              subPath: config.yaml
+              readOnly: true
             - name: shm
               mountPath: /dev/shm
           resources:
@@ -75,6 +69,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: hermes-data
+        - name: config
+          configMap:
+            name: hermes-config
         - name: shm
           emptyDir:
             medium: Memory
