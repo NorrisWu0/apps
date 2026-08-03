@@ -1,6 +1,6 @@
 # Cluster Dependencies
 
-This directory contains the Cloud-backed `ClusterSecretStore` used by the
+This directory contains the Cloud-backed `SecretStore` used by the
 applications in the `norriswu0` namespace.
 
 ## Create the sealed credential
