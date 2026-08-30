@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: me
+spec:
+  selector:
+    matchLabels:
+      app: me
+  template:
+    metadata:
+      labels:
+        app: me
+    spec:
+      containers:
+        - name: me
+          image: ghcr.io/norriswu0/me
