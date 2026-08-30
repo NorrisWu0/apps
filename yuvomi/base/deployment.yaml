@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yuvomi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yuvomi
+  template:
+    metadata:
+      labels:
+        app: yuvomi
+    spec:
+      containers:
+        - name: yuvomi
+          image: ghcr.io/ulsklyc/yuvomi
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3000"
+            - name: DB_PATH
+              value: /data/yuvomi.db
+            - name: BACKUP_DIR
+              value: /backups
+            - name: SESSION_SECURE
+              value: "true"
+            - name: TRUST_PROXY
+              value: "1"
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: yuvomi-secrets
+                  key: SESSION_SECRET
+            - name: DB_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: yuvomi-secrets
+                  key: DB_ENCRYPTION_KEY
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              subPath: data
+            - name: data
+              mountPath: /backups
+              subPath: backups
+            - name: data
+              mountPath: /app/modules
+              subPath: modules
+            - name: data
+              mountPath: /documents
+              subPath: documents
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: yuvomi-data

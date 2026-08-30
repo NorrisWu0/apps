@@ -1,1 +1,4 @@
 .opencode/plans/
+.infisical/
+*.env
+norriswu0-secret-store/infisical-universal-auth.secret.yaml

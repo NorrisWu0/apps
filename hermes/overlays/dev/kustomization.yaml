@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: norriswu0-dev
+
+resources:
+  - ../../base
+
+images:
+  - name: nousresearch/hermes-agent
+    newTag: v2026.7.30
+    digest: sha256:b869e64d6496d4763d5e4fb675b5f504cb23b0e35ec9b790481a56118602b10f

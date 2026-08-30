@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: hermes
+  template:
+    metadata:
+      labels:
+        app: hermes
+    spec:
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 10000
+      containers:
+        - name: hermes
+          image: nousresearch/hermes-agent
+          args:
+            - gateway
+            - run
+          ports:
+            - name: api
+              containerPort: 8642
+            - name: dashboard
+              containerPort: 9119
+          envFrom:
+            - secretRef:
+                name: hermes-secrets
+          env:
+            - name: HERMES_DASHBOARD
+              value: "1"
+            - name: HERMES_SKIP_CONFIG_MIGRATION
+              value: "true"
+          volumeMounts:
+            - name: data
+              mountPath: /opt/data
+            - name: config
+              mountPath: /opt/data/config.yaml
+              subPath: config.yaml
+              readOnly: true
+            - name: shm
+              mountPath: /dev/shm
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: api
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: api
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: hermes-data
+        - name: config
+          configMap:
+            name: hermes-config
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
