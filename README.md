@@ -30,6 +30,8 @@ Required `namespaceResourceWhitelist` entries for the AppProject:
   kind: PersistentVolumeClaim
 - group: ""
   kind: Secret
+- group: ""
+  kind: ServiceAccount
 - group: apps
   kind: Deployment
 - group: networking.k8s.io
@@ -42,5 +44,6 @@ Required `namespaceResourceWhitelist` entries for the AppProject:
 
 - **Tailscale Operator** — `ingressClassName: tailscale`, tailnet `hoki-solt.ts.net`
 - **External Secrets Operator** + Infisical SecretStore `norriswu0-secret-store` ([base](./norriswu0-secret-store/base/), [prod](./norriswu0-secret-store/overlays/prod/), [dev](./norriswu0-secret-store/overlays/dev/))
+- **`ghcr-credential`** — shared GHCR image pull secret ([base](./ghcr-credential/base/), [prod](./ghcr-credential/overlays/prod/), [dev](./ghcr-credential/overlays/dev/)); sourced from Infisical root secrets `GHCR_USERNAME` / `GHCR_TOKEN` (classic PAT, `read:packages`), and bound to the namespace `default` ServiceAccount so deployments don't need `imagePullSecrets`
 - **Infisical** — secret `/beaverhabit/TRUSTED_LOCAL_EMAIL` provisioned
 - **Hermes** — Infisical secrets under `/hermes/`; Authentik OIDC callback `https://hermes.hoki-sole.ts.net/auth/callback`
