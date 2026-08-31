@@ -19,6 +19,16 @@ Each app follows the `base/` + `overlays/` pattern:
 | [yuvomi](./yuvomi/overlays/prod/)               | `ghcr.io/ulsklyc/yuvomi:latest`            | 3000      | `yuvomi.hoki-solt.ts.net`                                  | 1Gi |
 | [hermes](./hermes/overlays/prod/)               | `nousresearch/hermes-agent:v2026.7.30`     | 9119/8642 | `hermes.hoki-sole.ts.net` / `hermes-api.hoki-sole.ts.net`  | 5Gi |
 
+## Networking (prod only)
+
+[network](./network/overlays/prod/) exposes workloads publicly via Cloudflare Tunnel:
+
+- **cloudflared** — remotely-managed tunnel (`TUNNEL_TOKEN`), routes Cloudflare edge → `norriswu0-gateway:80`
+- **kgateway Gateway** (`norriswu0-gateway`) — in-cluster HTTP gateway; workloads attach via `HTTPRoute`
+- **cert-manager Issuer** (`norriswu0-tls-issuer-prod`) — Let's Encrypt DNS01 via Cloudflare
+
+Dev workloads stay Tailscale-only.
+
 ## ArgoCD Namespace Resource Whitelist
 
 Required `namespaceResourceWhitelist` entries for the AppProject:
@@ -38,6 +48,16 @@ Required `namespaceResourceWhitelist` entries for the AppProject:
   kind: Ingress
 - group: external-secrets.io
   kind: ExternalSecret
+- group: cert-manager.io
+  kind: Issuer
+- group: cert-manager.io
+  kind: Certificate
+- group: gateway.networking.k8s.io
+  kind: Gateway
+- group: gateway.networking.k8s.io
+  kind: HTTPRoute
+- group: gateway.kgateway.dev
+  kind: GatewayParameters
 ```
 
 ## Dependencies
@@ -47,3 +67,4 @@ Required `namespaceResourceWhitelist` entries for the AppProject:
 - **`ghcr-credential`** — shared GHCR image pull secret ([base](./ghcr-credential/base/), [prod](./ghcr-credential/overlays/prod/), [dev](./ghcr-credential/overlays/dev/)); sourced from Infisical root secrets `GHCR_USERNAME` / `GHCR_TOKEN` (classic PAT, `read:packages`), and bound to the namespace `default` ServiceAccount so deployments don't need `imagePullSecrets`
 - **Infisical** — secret `/beaverhabit/TRUSTED_LOCAL_EMAIL` provisioned
 - **Hermes** — Infisical secrets under `/hermes/`; Authentik OIDC callback `https://hermes.hoki-sole.ts.net/auth/callback`
+- **Network / Cloudflare** — Infisical secrets `/cloudflare/API_TOKEN` (DNS01) and `/cloudflare/TUNNEL_TOKEN` (tunnel); Cloudflare public hostname → `http://norriswu0-gateway.norriswu0-prod.svc.cluster.local:80` is configured in the Cloudflare Zero Trust dashboard
