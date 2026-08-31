@@ -18,6 +18,7 @@ Each app follows the `base/` + `overlays/` pattern:
 | [bentopdf](./bentopdf/overlays/prod/)           | `ghcr.io/alam00000/bentopdf-simple:latest` | 8080      | `pdf.hoki-solt.ts.net`                                     | —   |
 | [yuvomi](./yuvomi/overlays/prod/)               | `ghcr.io/ulsklyc/yuvomi:latest`            | 3000      | `yuvomi.hoki-solt.ts.net`                                  | 1Gi |
 | [hermes](./hermes/overlays/prod/)               | `nousresearch/hermes-agent:v2026.7.30`     | 9119/8642 | `hermes.hoki-sole.ts.net` / `hermes-api.hoki-sole.ts.net`  | 5Gi |
+| [me](./me/overlays/prod/)                       | `ghcr.io/norriswu0/me:latest`              | 3000      | `me.norriswu.me` / `norriswu.me`                            | —   |
 
 ## Networking (prod only)
 

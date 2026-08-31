@@ -4,6 +4,7 @@ namespace: norriswu0-prod
 
 resources:
   - ../../base
+  - httproute.yaml
 
 images:
   - name: ghcr.io/norriswu0/me

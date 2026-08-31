@@ -14,3 +14,5 @@ spec:
       containers:
         - name: me
           image: ghcr.io/norriswu0/me
+          ports:
+            - containerPort: 3000
