@@ -4,6 +4,7 @@ namespace: norriswu0-dev
 
 resources:
   - ../../base
+  - ingress.yaml
 
 images:
   - name: ghcr.io/norriswu0/me

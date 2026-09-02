@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: me
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - me
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: me
+                port:
+                  number: 3000
