@@ -8,4 +8,4 @@ resources:
 
 images:
   - name: ghcr.io/norriswu0/me
-    newTag: 668466060bec1ffe7645762b6c325b07a0b18949
+    newTag: 1712646cd2125b4c4794938e33b40a3b2958e6df
