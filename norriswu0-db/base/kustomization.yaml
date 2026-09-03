@@ -7,3 +7,4 @@ resources:
   - externalsecret.yaml
   - pgadmin-deployment.yaml
   - pgadmin-service.yaml
+  - pgadmin-pvc.yaml
