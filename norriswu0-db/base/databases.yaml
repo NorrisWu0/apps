@@ -1,0 +1,82 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: playground-user
+spec:
+  name: playground-user
+  ensure: present
+  login: true
+  passwordSecret:
+    name: norriswu0-db-app
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: playground
+spec:
+  name: playground
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: academic-record
+spec:
+  name: academic_record
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: boy-girl
+spec:
+  name: boy_girl
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: cia
+spec:
+  name: cia
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: nasa2
+spec:
+  name: nasa2
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: pizza
+spec:
+  name: pizza
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: share
+spec:
+  name: share
+  owner: playground-user
+  cluster:
+    name: norriswu0-db

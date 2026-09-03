@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: playground-db-init
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: init
+          image: postgres:18-alpine
+          env:
+            - name: PGHOST
+              value: norriswu0-db-rw
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              value: playground-user
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: norriswu0-db-app
+                  key: password
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apply() {
+                db="$1"
+                file="$2"
+                echo "waiting for database $db..."
+                until psql -d "$db" -c "SELECT 1" >/dev/null 2>&1; do sleep 2; done
+                echo "applying $file to $db"
+                psql -d "$db" -f "/init/$file"
+              }
+              apply academic_record academicrecord.sql
+              apply boy_girl BoyGirl.sql
+              apply cia CIAlabexercise.sql
+              apply nasa2 nasa2.sql
+              apply pizza pizza.sql
+              apply share shr.sql
+              echo "done"
+          volumeMounts:
+            - name: init
+              mountPath: /init
+      volumes:
+        - name: init
+          configMap:
+            name: db-init-scripts

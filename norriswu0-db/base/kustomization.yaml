@@ -3,8 +3,19 @@ kind: Kustomization
 
 resources:
   - cluster.yaml
-  - playground-db.yaml
+  - databases.yaml
+  - init-job.yaml
   - externalsecret.yaml
   - pgadmin-deployment.yaml
   - pgadmin-service.yaml
   - pgadmin-pvc.yaml
+
+configMapGenerator:
+  - name: db-init-scripts
+    files:
+      - scripts/academicrecord.sql
+      - scripts/BoyGirl.sql
+      - scripts/CIAlabexercise.sql
+      - scripts/nasa2.sql
+      - scripts/pizza.sql
+      - scripts/shr.sql
