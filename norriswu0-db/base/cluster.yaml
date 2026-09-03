@@ -1,0 +1,11 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: norriswu0-db
+spec:
+  instances: 1
+  storage:
+    size: 1Gi
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: norriswu0-db-superuser
