@@ -80,3 +80,14 @@ spec:
   owner: playground-user
   cluster:
     name: norriswu0-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: movie
+spec:
+  name: movie 
+  owner: playground-user
+  cluster:
+    name: norriswu0-db
+

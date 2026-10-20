@@ -19,3 +19,4 @@ configMapGenerator:
       - scripts/nasa2.sql
       - scripts/pizza.sql
       - scripts/shr.sql
+      - scripts/movie.sql

@@ -4,6 +4,7 @@ metadata:
   name: playground-db-init
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: Force=true,Replace=true
 spec:
   backoffLimit: 3
   template:
@@ -41,6 +42,7 @@ spec:
               apply nasa2 nasa2.sql
               apply pizza pizza.sql
               apply share shr.sql
+              apply movie movie.sql
               echo "done"
           volumeMounts:
             - name: init
