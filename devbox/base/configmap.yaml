@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devbox-authorized-keys
+data:
+  norris: |
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2+FrxxTba15tahl43VIhM+i7lOKQD+7UVY328cNA2W

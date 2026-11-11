@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devbox
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: devbox
+  template:
+    metadata:
+      labels:
+        app: devbox
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      nodeSelector:
+        kubernetes.io/os: linux
+        kubernetes.io/arch: amd64
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: devbox
+          image: ghcr.io/norriswu0/devbox-debian@sha256:525827c70f5a50fc5e10f75dd10c7b38f9426dbec0e51bd90dccfb9c167a58e5
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "/etc/devbox/startup/start.sh"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN
+                - DAC_OVERRIDE
+                - FOWNER
+                - SETGID
+                - SETUID
+                - SYS_CHROOT
+          ports:
+            - name: ssh
+              containerPort: 2222
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/devbox
+            - name: authorized-keys
+              mountPath: /etc/devbox/authorized_keys
+              readOnly: true
+            - name: startup
+              mountPath: /etc/devbox/startup
+              readOnly: true
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+          startupProbe:
+            tcpSocket:
+              port: ssh
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            tcpSocket:
+              port: ssh
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: ssh
+            periodSeconds: 30
+            timeoutSeconds: 2
+            failureThreshold: 3
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: devbox-data
+        - name: authorized-keys
+          configMap:
+            name: devbox-authorized-keys
+            defaultMode: 0444
+        - name: startup
+          configMap:
+            name: devbox-startup
+            defaultMode: 0444

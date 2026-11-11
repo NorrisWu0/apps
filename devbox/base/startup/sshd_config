@@ -1,0 +1,11 @@
+Port 2222
+HostKey /var/lib/devbox/ssh/ssh_host_ed25519_key
+AuthorizedKeysFile /etc/devbox/authorized_keys/%u
+AuthenticationMethods publickey
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitEmptyPasswords no
+PermitRootLogin no
+AllowUsers norris
+UsePAM no
+Subsystem sftp internal-sftp
