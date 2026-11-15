@@ -1,6 +1,9 @@
 Port 2222
 HostKey /var/lib/devbox/ssh/ssh_host_ed25519_key
-AuthorizedKeysFile /etc/devbox/authorized_keys/%u
+# ConfigMap projection directories are 0777, despite the read-only mount.
+AuthorizedKeysFile none
+AuthorizedKeysCommand /usr/bin/cat /etc/devbox/authorized_keys/%u
+AuthorizedKeysCommandUser nobody
 AuthenticationMethods publickey
 PasswordAuthentication no
 KbdInteractiveAuthentication no
