@@ -35,6 +35,7 @@ spec:
               drop:
                 - ALL
               add:
+                - AUDIT_WRITE
                 - CHOWN
                 - DAC_OVERRIDE
                 - FOWNER
